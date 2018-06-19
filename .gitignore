@@ -1,3 +1,6 @@
+# vagrant files
+.vagrant
+
 *.rbc
 capybara-*.html
 .rspec
@@ -46,4 +49,7 @@ bower.json
 
 # Ignore node_modules
 node_modules/
+
+# Gemfile.lcok
+Gemfile.lcok
 

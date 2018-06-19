@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# railsapp
+
+# chkconfig: 2345 82 55
+# processname: railsapp
+# description: Runs railsapp for nginx integration.
+
+# Include RedHat function library
+. /etc/rc.d/init.d/functions
+
+# The name of the service
+NAME=rails-app
+
+# The username and path to the myapp source
+USER=vagrant
+APP_PATH=/vagrant/$NAME
+CMD_PATH=/home/vagrant/.rbenv/shims
+# The PID and LOCK files used by puma and sidekiq
+UPID=$APP_PATH/tmp/pids/puma.pid
+ULOCK=/var/lock/subsys/$NAME
+
+# The options to use when running puma
+#OPTS="-F $APP_PATH/config/puma.rb"
+#OPTS="-d -p $UPID -C $APP_PATH/config/puma.rb"
+# Ruby related path update
+#RUBY_PATH_PATCH="PATH=$PATH:/home/vagrant/.rbenv/shims && export PATH && "
+BUNDLE_CMD=bundle
+PUML_CMD=pumactl
+# . /etc/profile.d/rbenv.sh
+
+start() {
+  # Start puma
+  echo -n $"Starting $NAME: "
+  #daemon --pidfile=$UPID --user=$USER $BUNDLE_CMD exec $PUMA_CMD $OPTS start
+  su -l $USER -c "cd $APP_PATH;${BUNDLE_CMD} exec ${PUML_CMD} start"
+  puma=$?
+  [ $puma -eq 0 ] && touch $ULOCK
+  echo
+
+  return $puma
+}
+
+stop() {
+  # Stop puma
+  echo -n $"Stopping $NAME: "
+  su -l $USER -c "cd $APP_PATH;${BUNDLE_CMD} exec ${PUML_CMD} stop"
+  puma=$?
+  [ $puma -eq 0 ] && rm -f $ULOCK
+  echo
+
+  return $puma
+}
+
+restart() {
+  stop
+  start
+}
+
+get_status() {
+  status -p $UPID $NAME
+}
+
+query_status() {
+  get_status >/dev/null 2>&1
+}
+
+case "$1" in
+  start)
+    query_status && exit 0
+    start
+    ;;
+  stop)
+    query_status || exit 0
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  status)
+    get_status
+    exit $?
+    ;;
+  *)
+    N=/etc/init.d/$NAME
+    echo "Usage: $N {start|stop|restart|status}" >&2
+    exit 1
+    ;;
+esac
+
+exit 0
