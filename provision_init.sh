@@ -69,6 +69,7 @@ rbenv rehash
 
 # puma setting
 mkdir -p /tmp/sockets
+mkdir -p ${RAILS_APP}/tmp/pids
 << COMMENTOUT
 cat <<EOF>> ${RAILS_APP}/config/puma.rb
 bind "unix:/tmp/sockets/puma.sock"
