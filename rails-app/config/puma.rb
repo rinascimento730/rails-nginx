@@ -32,3 +32,19 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+bind "unix:/tmp/sockets/puma.sock"
+
+# uncomment and customize to run in non-root path
+# note that config/puma.yml web path should also be changed
+application_path = "#{File.expand_path("../..", __FILE__)}"
+
+# Daemonize the server into the background. Highly suggest that
+# this be combined with “pidfile” and “stdout_redirect”.
+#
+# The default is “false”.
+#
+daemonize true
+
+# Store the pid of the server in the file at “path”.
+#
+pidfile "#{application_path}/tmp/pids/puma.pid"

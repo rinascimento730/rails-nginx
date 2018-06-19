@@ -52,6 +52,7 @@ gem update --system
 gem install --no-ri --no-rdoc rails
 rbenv rehash
 
+<< COMMENTOUT
 # rails app setting
 cd /vagrant
 rails new rails-app -d mysql --skip-test --skip-bundle
@@ -59,6 +60,7 @@ RAILS_APP='/vagrant/rails-app'
 sh -c "cat <<EOF>> ${RAILS_APP}/Gemfile
 gem 'therubyracer', platforms: :ruby
 EOF"
+COMMENTOUT
 
 # bundle install
 cd ${RAILS_APP}
@@ -67,6 +69,7 @@ rbenv rehash
 
 # puma setting
 mkdir -p /tmp/sockets
+<< COMMENTOUT
 cat <<EOF>> ${RAILS_APP}/config/puma.rb
 bind "unix:/tmp/sockets/puma.sock"
 
@@ -85,6 +88,7 @@ daemonize true
 #
 pidfile "#{application_path}/tmp/pids/puma.pid"
 EOF
+COMMENTOUT
 
 # puma service setting
 sudo cp /vagrant/init.d/puma /etc/init.d
