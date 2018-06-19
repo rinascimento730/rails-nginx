@@ -52,11 +52,11 @@ gem update --system
 gem install --no-ri --no-rdoc rails
 rbenv rehash
 
+RAILS_APP='/vagrant/rails-app'
 << COMMENTOUT
 # rails app setting
 cd /vagrant
 rails new rails-app -d mysql --skip-test --skip-bundle
-RAILS_APP='/vagrant/rails-app'
 sh -c "cat <<EOF>> ${RAILS_APP}/Gemfile
 gem 'therubyracer', platforms: :ruby
 EOF"
@@ -104,8 +104,6 @@ sudo service nginx start
 
 # Create Mysql User for Rails
 mysql -u root < /vagrant/db/create_user_vagrant.sql
-# change root password
-mysqladmin -u root password 'vagrant'
 
 # Create database
 cd ${RAILS_APP}
